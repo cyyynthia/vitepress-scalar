@@ -1,0 +1,209 @@
+/*!
+ * Parts of this file are from the VitePress project (https://github.com/vuejs/vitepress).
+ * Licensed under the MIT license. https://github.com/vuejs/vitepress/blob/8f31a4c/LICENSE
+ * Copyright (c) 2019-present, Yuxi (Evan) You
+ *
+ * Copyright (c) Cynthia Rey, All rights reserved.
+ * SPDX-License-Identifier: BSD-3-Clause AND MIT
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright notice, this
+ *    list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the
+ *    documentation and/or other materials provided with the distribution.
+ * 3. Neither the name of the copyright holder nor the names of its contributors
+ *    may be used to endorse or promote products derived from this software without
+ *    specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
+.openapi-spec-wrapper {
+	--scalar-sidebar-width: calc(100vw - 64px);
+}
+
+.openapi-spec-wrapper .references-navigation {
+	position: fixed;
+	display: block !important;
+	top: var(--vp-layout-top-height, 0px);
+	bottom: 0;
+	left: 0;
+	padding: 32px 32px 96px;
+	z-index: var(--vp-z-index-sidebar);
+	width: var(--scalar-sidebar-width);
+	max-width: 320px;
+	background-color: var(--vp-sidebar-bg-color);
+	opacity: 0;
+	box-shadow: var(--vp-c-shadow-3);
+	overflow-x: hidden;
+	overflow-y: auto;
+	transform: translateX(-100%);
+	transition: opacity 0.5s, transform 0.25s ease;
+	overscroll-behavior: contain;
+}
+
+.openapi-spec-wrapper .references-navigation-list {
+	position: initial !important;
+	border-top: 0 !important;
+	overflow: visible;
+}
+
+.openapi-spec-wrapper.sidebar-open .references-navigation {
+	opacity: 1;
+	visibility: visible;
+	transform: translateX(0);
+	transition: opacity 0.25s,
+	transform 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+.dark .openapi-spec-wrapper .references-navigation {
+	box-shadow: var(--vp-shadow-1);
+}
+
+@media (min-width: 960px) {
+	.openapi-spec-wrapper {
+		--scalar-sidebar-width: var(--vp-sidebar-width);
+	}
+
+	.openapi-spec-wrapper .references-navigation {
+		padding-top: var(--vp-nav-height);
+		max-width: 100%;
+		background-color: var(--vp-sidebar-bg-color);
+		opacity: 1;
+		visibility: visible;
+		box-shadow: none;
+		transform: translateX(0);
+	}
+}
+
+@media (min-width: 1440px) {
+	.openapi-spec-wrapper {
+		--scalar-sidebar-width: calc((100% - (var(--vp-layout-max-width) - 64px)) / 2 + var(--vp-sidebar-width) - 32px);
+	}
+
+	.openapi-spec-wrapper .references-navigation {
+		padding-left: max(32px, calc((100% - (var(--vp-layout-max-width) - 64px)) / 2));
+	}
+}
+
+@media (min-width: 960px) {
+	.openapi-spec-wrapper .references-navigation::before {
+		content: '';
+		display: block;
+		position: sticky;
+		left: 0;
+		z-index: 1;
+		top: calc(var(--vp-nav-height) * -1);
+		margin-top: calc(var(--vp-nav-height) * -1);
+		margin-right: -32px;
+		margin-left: -32px;
+		height: var(--vp-nav-height);
+		background-color: var(--vp-sidebar-bg-color);
+	}
+}
+
+.openapi-spec-wrapper .references-navigation .sidebar {
+	border-width: 0;
+	overflow: visible;
+}
+
+.openapi-spec-wrapper .sidebar .scalar-api-references-standalone-search {
+	display: none;
+}
+
+.openapi-spec-wrapper .sidebar .sidebar-pages {
+	overflow: visible;
+	padding: 10px 0 0;
+	border: 0;
+}
+
+.openapi-spec-wrapper .sidebar .sidebar-group {
+	width: calc(var(--vp-sidebar-width) - 64px);
+}
+
+.openapi-spec-wrapper .sidebar .sidebar-heading {
+	font-size: 14px;
+	padding: 0;
+	padding-left: 0 !important;
+}
+
+.openapi-spec-wrapper .sidebar-indent-nested:not(.sidebar-pages > .sidebar-indent-nested) {
+	border-left: 1px solid var(--vp-c-divider);
+	padding-left: 16px;
+}
+
+.openapi-spec-wrapper .sidebar-indent-nested:not(.sidebar-pages > .sidebar-indent-nested) .sidebar-group-item .sidebar-heading:not([data-sidebar-type="heading"])::after {
+	content: '';
+	position: absolute;
+	display: block;
+	top: 4px;
+	bottom: 4px;
+	left: -17px;
+	width: 2px;
+	border-radius: 2px;
+	transition: background-color 0.25s;
+}
+
+.openapi-spec-wrapper .sidebar-group-item .sidebar-heading.active_page::after {
+	background-color: var(--vp-c-brand-1);
+}
+
+.openapi-spec-wrapper .sidebar-heading-link {
+	transition: color 0.25s;
+	line-height: 24px;
+	padding: 4px 0;
+}
+
+.openapi-spec-wrapper .sidebar-group-item {
+	font-weight: 500;
+}
+
+.openapi-spec-wrapper .sidebar-heading:hover {
+	color: var(--vp-c-brand-1);
+}
+
+.openapi-spec-wrapper .sidebar-heading.sidebar-group-item__folder {
+	color: var(--vp-c-text-1);
+	border-top: 1px solid var(--vp-c-divider);
+	padding-top: 10px;
+	margin-top: 24px;
+	font-weight: 700;
+	flex-direction: row-reverse;
+}
+
+.openapi-spec-wrapper .sidebar-heading.sidebar-group-item__folder .sidebar-heading-link-title {
+	color: var(--vp-c-text-1) !important;
+}
+
+.openapi-spec-wrapper .sidebar-heading .sidebar-heading-chevron {
+	width: 32px;
+	height: 32px;
+	margin: 0 -7px 0 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	color: var(--vp-c-text-3) !important;
+	cursor: pointer;
+	transition: color 0.25s;
+	flex-shrink: 0;
+}
+
+.openapi-spec-wrapper .sidebar-heading:hover .sidebar-heading-chevron {
+	color: var(--vp-c-text-1) !important;
+}
+
+.openapi-spec-wrapper .sidebar-heading .sidebar-heading-chevron button {
+	color: inherit !important;
+}
