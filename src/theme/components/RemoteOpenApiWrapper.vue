@@ -26,20 +26,30 @@
 	OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -->
 
-<script setup>
-import { useData } from 'vitepress'
-import UserTheme from 'vitepress-scalar:@theme'
+<script setup lang="ts">
+import type { OpenAPI } from '@scalar/openapi-parser'
+import type { DefaultTheme } from 'vitepress'
 
-import OpenApiView from './OpenApiView.vue'
-import RemoteOpenApiView from './RemoteOpenApiWrapper.vue'
+import { computed, ref, watchEffect } from 'vue'
+import { loadSpec } from '../../core/fetch.js'
+import { getSidebarItems } from '../../core/sidebar.js'
 
-const { page } = useData()
+const props = defineProps<{ url: string }>()
+
+const spec = ref<OpenAPI.Document>()
+const sidebar = computed(() => spec.value ? getSidebarItems(spec.value, location.pathname) : [])
+
+watchEffect(async () => {
+	const fetched = await loadSpec(props.url)
+	spec.value = fetched.schema
+})
+
+defineSlots<{
+	default (props: { spec: OpenAPI.Document, sidebar: DefaultTheme.SidebarItem[] }): unknown
+}>()
 </script>
 
 <template>
-	<RemoteOpenApiView v-if="page.openapi?.type === 'remote'" v-slot="{ spec, sidebar }" :url="page.openapi.url">
-		<OpenApiView :spec="spec" :sidebar="sidebar" />
-	</RemoteOpenApiView>
-	<OpenApiView v-else-if="page.openapi?.type === 'local'" :spec="page.openapi.spec" :sidebar="page.sidebar" />
-	<UserTheme.Layout v-else />
+	<slot v-if="spec" :spec="spec" :sidebar="sidebar" />
+	<div v-else>loading...</div>
 </template>

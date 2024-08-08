@@ -1,13 +1,14 @@
 {
 	"extends": [
-		"@tsconfig/strictest/tsconfig.json",
-		"@tsconfig/node-lts/tsconfig.json"
+		"@tsconfig/strictest/tsconfig.json"
 	],
 	"compilerOptions": {
 		"declaration": true,
-		"isolatedModules": false,
-		"preserveConstEnums": false,
 		"outDir": "./dist",
+
+		"module": "ESNext",
+		"target": "ESNext",
+		"moduleResolution": "Bundler",
 
 		"lib": ["esnext", "dom"],
 		"types": ["vite/client"]

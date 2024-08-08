@@ -26,15 +26,19 @@
 	OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -->
 
-<script setup>
-import { useData } from 'vitepress'
+<script setup lang="ts">
+import type { OpenAPI } from '@scalar/openapi-parser'
+
+import { onBeforeMount, onBeforeUnmount, watch, triggerRef } from 'vue'
+import { DefaultTheme, useData } from 'vitepress'
 import { useSidebar } from 'vitepress/theme'
 
-import { ApiReference } from '@scalar/api-reference'
+import { ApiReferenceLayout } from '@scalar/api-reference'
 import VPSkipLink from 'vitepress/dist/client/theme-default/components/VPSkipLink.vue'
 import VPBackdrop from 'vitepress/dist/client/theme-default/components/VPBackdrop.vue'
 import VPNav from 'vitepress/dist/client/theme-default/components/VPNav.vue'
 import VPLocalNav from 'vitepress/dist/client/theme-default/components/VPLocalNav.vue'
+import VPSidebar from 'vitepress/dist/client/theme-default/components/VPSidebar.vue'
 import VPFooter from 'vitepress/dist/client/theme-default/components/VPFooter.vue'
 
 import '@scalar/api-reference/style.css'
@@ -43,8 +47,41 @@ import '../styles/sidebar.css'
 import '../styles/intro.css'
 import '../styles/vp-fixes.css'
 
-const { isDark } = useData()
+const { isDark, site, hash } = useData()
 const { isOpen: isSidebarOpen, open: openSidebar, close: closeSidebar } = useSidebar()
+
+const props = defineProps<{ spec: OpenAPI.Document, sidebar: DefaultTheme.SidebarItem[] }>()
+
+function handleReplaceState () {
+	// exposed hash is a ro computed view of the actual ref... >:)
+	;(hash as any)._value = location.hash
+	triggerRef(hash)
+}
+
+// May the moron who decided that hashchange doesn't always fire burn in hell. (see note on step 8)
+// https://html.spec.whatwg.org/multipage/browsing-the-web.html#url-and-history-update-steps
+const _replaceState = history.replaceState
+onBeforeMount(() => history.replaceState = (...args) => (_replaceState.apply(history, args), handleReplaceState()))
+onBeforeUnmount(() => history.replaceState = _replaceState)
+
+// Hack to inject the sidebar we want. It's ugly, but it does the trick...
+let vpSidebar: DefaultTheme.SidebarItem[]
+onBeforeMount(() => {
+	site.value.themeConfig ??= {}
+	site.value.themeConfig.sidebar ??= []
+
+	vpSidebar = [ ...site.value.themeConfig.sidebar ]
+
+	watch(
+		() => props.sidebar,
+		() => (site.value.themeConfig.sidebar = props.sidebar),
+		{ immediate: true },
+	)
+})
+
+onBeforeUnmount(() => {
+	site.value.themeConfig.sidebar = vpSidebar
+})
 </script>
 
 <template>
@@ -54,13 +91,19 @@ const { isOpen: isSidebarOpen, open: openSidebar, close: closeSidebar } = useSid
 	<VPNav class="openapi-nav" />
 	<VPLocalNav :open="isSidebarOpen" @open-menu="openSidebar" />
 
-	<div class="openapi-spec-wrapper" :class="{ 'sidebar-open': isSidebarOpen }">
-		<ApiReference
+	<VPSidebar :open="isSidebarOpen" class="VPScalarSidebar" />
+
+	<div
+		class="VPDoc openapi-spec-wrapper"
+		:class="{ 'light-mode': !isDark, 'dark-mode': isDark }"
+	>
+		<ApiReferenceLayout
+			:parsedSpec="spec"
+			:rawSpec="JSON.stringify(spec, null, '\t')"
 			:configuration="{
-				darkMode: isDark,
-				spec: {
-					url: 'https://cdn.jsdelivr.net/npm/@scalar/galaxy/dist/latest.yaml',
-				},
+				showSidebar: false,
+				withDefaultFonts: false,
+				defaultOpenAllTags: true,
 			}"
 		/>
 	</div>

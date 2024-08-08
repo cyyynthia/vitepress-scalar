@@ -26,7 +26,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-.openapi-spec-wrapper :is(.scalar-app, .light-mode, .dark-mode) {
+body, .openapi-spec-wrapper :is(.scalar-app, .light-mode, .dark-mode) {
 	--scalar-font: var(--vp-font-family-base);
 
 	--scalar-background-1: var(--vp-c-bg);
@@ -46,11 +46,5 @@
 	--scalar-color-yellow: var(--vp-c-yellow-2);
 
 	--scalar-custom-header-height: 0;
-	--scalar-header-height: 0 !important;
-}
-
-.t-doc__sidebar {
-	--scalar-sidebar-background-1: var(--vp-sidebar-bg-color);
-	--scalar-sidebar-border-color: var(--vp-c-divider);
-	--scalar-sidebar-color-active: var(--scalar-color-accent);
+	--scalar-header-height: 0;
 }

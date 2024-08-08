@@ -36,7 +36,7 @@ production readiness:
   - There is a valid argument that can be made, that doing it this way allows the docs to automagically update without
     having to re-build and deploy the VitePress app. Even if support for runtime rendering is preserved, it should
     just build VitePress's Markdown rendering logic in the final app to keep it consistent.
-- [ ] **Sidebar**. The current implementation just heavily changes Scalar's theme to make its sidebar look like
+- [x] **Sidebar**. The current implementation just heavily changes Scalar's theme to make its sidebar look like
   VitePress's, but that's not ideal. It'd be nice to ditch Scalar's sidebar and use the one from VitePress directly to
   improve compatibility with user styles & reduce code size.
 - [ ] **Scalar search**. The search component from Scalar has been stripped out; the goal is to merge it with
@@ -44,7 +44,7 @@ production readiness:
   docs for now.
 - [ ] **Builtin Scalar client**. It seems to be working, but is completely untested and seems to have issues with how
   things are linked, causing problems while navigating the client.
-- [ ] **Local OpenAPI files**. Or even the whole way OpenAPI reference pages are declared. Right now, using a Markdown
+- [x] **Local OpenAPI files**. Or even the whole way OpenAPI reference pages are declared. Right now, using a Markdown
   file was the easiest way to get something up and running, as VitePress's internals are really not expecting a lot of
   extensibility in this area. It is not impossible, however, to have a custom plugin to handle this in a much more
   advanced manner - including with support for local files.

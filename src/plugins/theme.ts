@@ -27,15 +27,15 @@
  */
 
 import type { Plugin } from 'vite'
-import { type SiteConfig } from 'vitepress'
+import type { SiteConfig } from 'vitepress'
 import { fileURLToPath } from 'node:url'
 
-export function createThemePlugin(): Plugin {
+export function createThemePlugin (): Plugin {
 	let siteConfig: SiteConfig
 
 	return {
 		name: 'vitepress-scalar:theme',
-		async config(cfg) {
+		async config (cfg) {
 			siteConfig = (cfg as any).vitepress
 
 			if (!Array.isArray(cfg.resolve?.alias)) {

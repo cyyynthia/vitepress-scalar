@@ -27,12 +27,11 @@
  */
 
 import { type DefaultTheme, mergeConfig, type UserConfig } from 'vitepress'
-import { createThemePlugin } from './plugins/theme.js'
-import { createScalarEsbuildPlugin } from './plugins/scalar.js'
 
-export type ScalarThemeConfig = {
-	scalar?: {}
-}
+import { createThemePlugin } from './plugins/theme.js'
+import { createOpenApiPlugin } from './plugins/openapi.js'
+
+export type ScalarThemeConfig = {}
 
 export function withScalar (config: UserConfig<ScalarThemeConfig>): UserConfig<ScalarThemeConfig> {
 	const scalarConfig: UserConfig<DefaultTheme.Config> = {
@@ -41,18 +40,12 @@ export function withScalar (config: UserConfig<ScalarThemeConfig>): UserConfig<S
 				{
 					name: 'vitepress-scalar:experimental-warn',
 					configResolved (config) {
-						;(config as any).vitepress.logger.warn('VitePress-Scalar: this vitepress addon is highly experimental and is not ready for production use at this time. Breaking changes can and will happen. Use at your own risk!')
+						;(config as any).vitepress.logger.warn('VitePress-Scalar: this addon is highly experimental and is not ready for production use at this time. Breaking changes can and will happen. Use at your own risk!')
 					},
 				},
 				createThemePlugin(),
+				createOpenApiPlugin(),
 			],
-			optimizeDeps: {
-				esbuildOptions: {
-					plugins: [
-						createScalarEsbuildPlugin(),
-					],
-				},
-			},
 		},
 	}
 
